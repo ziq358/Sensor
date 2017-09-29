@@ -26,5 +26,12 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta1'
+    compile 'com.android.support:design:26.+'
     testCompile 'junit:junit:4.12'
+
+
+    //二维码---
+    compile 'com.google.zxing:core:3.3.0'
+
+    //二维码----
 }
