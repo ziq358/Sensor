@@ -108,9 +108,12 @@ public class QRcodeActivity extends AppCompatActivity {
     }
 
     public void decodeQRcode(View v) {
+        //生成bitmap
         mQRcodeImageView.setDrawingCacheEnabled(true);
         Bitmap bitmap = mQRcodeImageView.getDrawingCache();
         String result = decodeQRcode(bitmap);
+        //清除缓存
+        mQRcodeImageView.setDrawingCacheEnabled(false);
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
 
     }
