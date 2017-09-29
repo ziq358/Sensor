@@ -21,13 +21,24 @@
             android:name=".QRcodeActivity"
             android:label="@string/title_activity_qrcode"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
+
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyB-IzXlsw4T3_GASSd6txPARmWuT7eH_rk" />
+
+        <!--<meta-data-->
+        <!--android:name="com.google.android.geo.API_KEY"-->
+        <!--android:value="AIzaSyB-IzXlsw4T3_GASSd6txPARmWuT7eH_rk" />-->
+
+        <activity android:name=".GoogleMapViewActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
         </activity>
     </application>
 
