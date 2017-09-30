@@ -1,4 +1,4 @@
-package com.xogrp.john.sensor;
+package com.xogrp.john.sensor.map;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.xogrp.john.sensor.R;
 
 public class GoogleMapViewActivity extends AppCompatActivity implements OnMapReadyCallback{
 

@@ -7,6 +7,19 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
+    <!--百度map 权限-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!--百度map 权限-->
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,7 +28,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
-
         </activity>
         <activity
             android:name=".QRcodeActivity"
@@ -23,17 +35,26 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyB-IzXlsw4T3_GASSd6txPARmWuT7eH_rk"/>
+
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.geo.API_KEY" -->
+        <!-- android:value="AIzaSyB-IzXlsw4T3_GASSd6txPARmWuT7eH_rk" /> -->
+
+        <activity
+            android:label="google"
+            android:name=".map.GoogleMapViewActivity">
+        </activity>
 
 
         <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyB-IzXlsw4T3_GASSd6txPARmWuT7eH_rk" />
-
-        <!--<meta-data-->
-        <!--android:name="com.google.android.geo.API_KEY"-->
-        <!--android:value="AIzaSyB-IzXlsw4T3_GASSd6txPARmWuT7eH_rk" />-->
-
-        <activity android:name=".GoogleMapViewActivity">
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="sZuV9BPElRPQkGd4Ele94pFZIUjFFK4F"/>
+        <activity
+            android:label="baidu map"
+            android:name=".map.BaiduMapActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
