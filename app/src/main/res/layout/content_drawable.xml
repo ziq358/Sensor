@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.xogrp.john.sensor.DrawableActivity"
+    tools:showIn="@layout/activity_drawable">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <com.xogrp.john.sensor.view.CanvasView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
+
+        <ImageView
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"
+            android:src="@mipmap/checklist_default"
+            />
+        <ImageView
+            android:layout_marginBottom="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@android:color/black"
+            android:src="@mipmap/checklist_default"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="scaleType= center"
+            />
+        <ImageView
+            android:layout_marginBottom="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@android:color/black"
+            android:src="@mipmap/checklist_default"
+            android:scaleType="center"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="scaleType= centerCrop"
+            />
+        <ImageView
+            android:layout_marginBottom="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@android:color/black"
+            android:src="@mipmap/checklist_default"
+            android:scaleType="centerCrop"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="scaleType= centerInside"
+            />
+        <ImageView
+            android:layout_marginBottom="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@android:color/black"
+            android:src="@mipmap/checklist_default"
+            android:scaleType="centerInside"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="scaleType= fitStart"
+            />
+        <ImageView
+            android:layout_marginBottom="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@android:color/black"
+            android:src="@mipmap/checklist_default"
+            android:scaleType="fitStart"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="scaleType= fitCenter"
+            />
+        <ImageView
+            android:layout_marginBottom="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@android:color/black"
+            android:src="@mipmap/checklist_default"
+            android:scaleType="fitCenter"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="scaleType= fitEnd"
+            />
+        <ImageView
+            android:layout_marginBottom="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@android:color/black"
+            android:src="@mipmap/checklist_default"
+            android:scaleType="fitEnd"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="scaleType= fitEnd"
+            />
+        <ImageView
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@android:color/black"
+            android:src="@mipmap/checklist_default"
+            android:scaleType="fitEnd"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="scaleType= fitXY"
+            />
+        <ImageView
+            android:layout_marginBottom="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@android:color/black"
+            android:src="@mipmap/checklist_default"
+            android:scaleType="fitXY"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="scaleType= matrix"
+            />
+        <ImageView
+            android:layout_marginBottom="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@android:color/black"
+            android:src="@mipmap/checklist_default"
+            android:scaleType="matrix"
+            />
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
