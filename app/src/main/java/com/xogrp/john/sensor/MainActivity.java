@@ -1,159 +1,94 @@
 package com.xogrp.john.sensor;
 
-import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.Set;
+import com.xogrp.john.sensor.map.BaiduMapActivity;
+import com.xogrp.john.sensor.map.GoogleMapViewActivity;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener{
-    SensorManager mSensorManager;
-    Sensor mSensor;
-    TextView text, bluetooth;
-    BluetoothAdapter bluetoothAdapter;
-    private String TAG = "ziq";
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+
+    private ListView mlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        text = (TextView) findViewById(R.id.text);
-        bluetooth = (TextView) findViewById(R.id.my_bluetooth);
-
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-        // 获取传感器的类型(TYPE_ACCELEROMETER:加速度传感器)
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-
-
-
-        //蓝牙。。。。。。。。
-
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        this.registerReceiver(mBluetoothReceiver, filter);
-        // Register for broadcasts when discovery has finished
-        filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        this.registerReceiver(mBluetoothReceiver, filter);
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        bluetooth.setOnClickListener(new View.OnClickListener() {
+        mlist = (ListView) findViewById(R.id.list_activity);
+        mlist.setAdapter(new ActivityListAdapter(getData()));
+        mlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= 23) {
-                    int checkAccessFinePermission = ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
-                    if (checkAccessFinePermission != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-                        Log.e(TAG, "没有权限，请求权限");
-                        return;
-                    }
-                    Log.e(TAG, "已有定位权限");
-                    //这里可以开始搜索操作
-                    search();
-                }
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Model model  = (Model) adapterView.getAdapter().getItem(i);
+                Intent intent = new Intent(MainActivity.this, model.cls);
+                startActivity(intent);
             }
         });
     }
 
-    private void search(){
-        if(!bluetoothAdapter.isEnabled()){
-            Intent enabler = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enabler,100);
-        }else{
-            //获取本机蓝牙名称
-            String name = bluetoothAdapter.getName();
-            //获取本机蓝牙地址
-            String address = bluetoothAdapter.getAddress();
-            Log.d(TAG,"bluetooth name ="+name+" address ="+address);
-            //获取已配对蓝牙设备
-            Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
-            Log.d(TAG, "bonded device size ="+devices.size());
-            for(BluetoothDevice bonddevice:devices){
-                Log.d(TAG, "bonded device name ="+bonddevice.getName()+" address"+bonddevice.getAddress());
-            }
-//            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-//            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 120);
-//            startActivity(discoverableIntent);
-
-            if (bluetoothAdapter.isDiscovering()) {
-                bluetoothAdapter.cancelDiscovery();
-            }
-            bluetoothAdapter.startDiscovery();
-        }
+    private List<Model> getData(){
+        List<Model> dataList = new ArrayList<>();
+        dataList.add(new Model("传感器，蓝牙", SensorActivity.class));
+        dataList.add(new Model("二维码", QRcodeActivity.class));
+        dataList.add(new Model("Google 地图", GoogleMapViewActivity.class));
+        dataList.add(new Model("百度 地图", BaiduMapActivity.class));
+        dataList.add(new Model("JNI", JniTestActivity.class));
+        dataList.add(new Model("Drawable", DrawableActivity.class));
+        return dataList;
     }
 
-    private BroadcastReceiver mBluetoothReceiver = new BroadcastReceiver(){
+    private class ActivityListAdapter extends BaseAdapter{
+
+        private List<Model> mData;
+
+        public ActivityListAdapter(List<Model> data) {
+            mData = data;
+        }
+
         @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            Log.d(TAG,"mBluetoothReceiver action ="+action);
-            if(BluetoothDevice.ACTION_FOUND.equals(action)){//每扫描到一个设备，系统都会发送此广播。
-                //获取蓝牙设备
-                BluetoothDevice scanDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if(scanDevice == null) return;
-                Log.d(TAG, "ACTION_FOUND name="+scanDevice.getName()+"address="+scanDevice.getAddress());
-            }else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)){
-                Log.d(TAG, "ACTION_DISCOVERY_FINISHED");
-            }
+        public int getCount() {
+            return mData.size();
         }
 
-    };
+        @Override
+        public Object getItem(int i) {
+            return mData.get(i);
+        }
 
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            View itemView = LayoutInflater.from(getBaseContext()).inflate(R.layout.list_item, viewGroup, false);
+            TextView textView = itemView.findViewById(R.id.name);
+            textView.setText(((Model)getItem(i)).name);
+            return itemView;
+        }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_GAME);
+    private static class Model {
+
+        public Model(String name, Class cls) {
+            this.name = name;
+            this.cls = cls;
+        }
+
+        String name;
+        Class cls;
     }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mSensorManager.unregisterListener(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        this.unregisterReceiver(mBluetoothReceiver);
-    }
-
-    // 当传感器的值改变的时候回调该方法
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-
-        float[] values = sensorEvent.values;
-        Log.e("ziq", " "+values[0]);
-        text.setText(" "+values[0]);
-
-    }
-    // 当传感器精度发生改变时回调该方法
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
-    }
-
 
 }
