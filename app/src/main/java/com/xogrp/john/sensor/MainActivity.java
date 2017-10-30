@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         dataList.add(new Model("百度 地图", BaiduMapActivity.class));
         dataList.add(new Model("JNI", JniTestActivity.class));
         dataList.add(new Model("Drawable", DrawableActivity.class));
+        dataList.add(new Model("OpenGl", OpenglActivity.class));
         return dataList;
     }
 
