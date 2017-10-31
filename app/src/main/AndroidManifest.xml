@@ -19,6 +19,10 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!-- 百度map 权限 -->
 
+    <!-- WIFI 权限-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+
 
     <!-- 极光推送 -->
     <!-- Required -->
@@ -174,6 +178,8 @@
         </activity>
         <activity android:name=".OpenglActivity">
         </activity>
+        <activity android:name=".OpenGL2Activity"/>
+        <activity android:name=".WifiActivity"/>
     </application>
 
 </manifest>

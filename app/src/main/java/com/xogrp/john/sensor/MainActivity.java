@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         dataList.add(new Model("JNI", JniTestActivity.class));
         dataList.add(new Model("Drawable", DrawableActivity.class));
         dataList.add(new Model("OpenGl", OpenglActivity.class));
+        dataList.add(new Model("Wifi", WifiActivity.class));
         return dataList;
     }
 
