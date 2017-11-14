@@ -178,7 +178,10 @@
         </activity>
         <activity android:name=".OpenglActivity">
         </activity>
-        <activity android:name=".OpenGL2Activity"/>
+        <activity android:name=".OpenGL2Activity"
+                  android:screenOrientation="landscape"
+                  android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+            />
         <activity android:name=".WifiActivity"/>
     </application>
 
