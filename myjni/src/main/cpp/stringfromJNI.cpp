@@ -3,6 +3,7 @@
 #include <math.h>
 #include <malloc.h>
 #include <android/bitmap.h>
+#include <string.h>
 
 #define PI 3.1415926
 void gaussBlur(int* pix, int w, int h, int radius);

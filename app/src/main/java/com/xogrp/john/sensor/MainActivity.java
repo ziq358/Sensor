@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         dataList.add(new Model("OpenGl", OpenglActivity.class));
         dataList.add(new Model("OpenGl2", OpenGL2Activity.class));
         dataList.add(new Model("Wifi", WifiActivity.class));
+        dataList.add(new Model("人脸识别", FaceDetectionActivity.class));
         return dataList;
     }
 

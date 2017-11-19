@@ -50,4 +50,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile project(':myjni')
+
+    compile 'com.squareup.picasso:picasso:2.2.0'
 }

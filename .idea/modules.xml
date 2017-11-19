@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Sensor.iml" filepath="$PROJECT_DIR$/Sensor.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://F:\project\Sensor\app\app.iml" filepath="F:\project\Sensor\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/myjni/myjni.iml" filepath="$PROJECT_DIR$/myjni/myjni.iml" />
+      <module fileurl="file://F:\project\Sensor\myjni\myjni.iml" filepath="F:\project\Sensor\myjni\myjni.iml" />
     </modules>
   </component>
 </project>
