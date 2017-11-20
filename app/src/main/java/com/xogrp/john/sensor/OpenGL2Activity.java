@@ -129,7 +129,6 @@ public class OpenGL2Activity extends Activity {
 
         @Override
         public void onSurfaceChanged(GL10 gl10, int surfaceWidth, int surfaceHeight) {
-            GLES20.glViewport(0, 0, surfaceWidth, surfaceHeight);
             this.surfaceWidth = surfaceWidth;
             this.surfaceHeight = surfaceHeight;
         }
