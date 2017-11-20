@@ -23,9 +23,16 @@ public class FaceDetectionHelper {
     }
 
     public CropResult cropBitmapByFace(Bitmap originalBitmap, float cropWidth, float cropHeight){
-        Bitmap mutableBitmap = forceConfig565(forceBitmapSize(originalBitmap));
-        //FaceDetector API 要求bitmap 满足 宽高都是双数、 Bitmap.Config.RGB_565
 
+        //没有这个。识别不正确
+        Bitmap bitmapTarget = originalBitmap.copy(Bitmap.Config.RGB_565, true);
+
+        if(!originalBitmap.isRecycled()){
+            originalBitmap.recycle();
+        }
+
+        Bitmap mutableBitmap = forceConfig565(forceBitmapSize(bitmapTarget));
+        //FaceDetector API 要求bitmap 满足 宽高都是双数、 Bitmap.Config.RGB_565
         FaceDetector.Face[] faces = getFaces(mutableBitmap, mMaxFaces);
         int faceCount = faces.length;
         Log.e(TAG, "cropBitmapByFace: faceCount = "+faceCount);

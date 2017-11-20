@@ -20,13 +20,14 @@ public class FaceDetectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_detection);
         FaceDetectionHelper faceDetectionHelper = new FaceDetectionHelper();
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.dopngman);
-        Bitmap bitmapTarget = bitmap.copy(Bitmap.Config.RGB_565, true);
+
+        int id = R.mipmap.imgs;
 
         ImageView imageView = (ImageView) findViewById(R.id.image);
-        imageView.setImageBitmap(bitmap);
+        imageView.setBackgroundResource(id);
 
-        FaceDetectionHelper.CropResult cropResult = faceDetectionHelper.cropBitmapByFace(bitmapTarget, 400, 400, 5);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.imgs);
+        FaceDetectionHelper.CropResult cropResult = faceDetectionHelper.cropBitmapByFace(bitmap, 400, 400, 5);
         ImageView imageCropView = (ImageView) findViewById(R.id.image_crop);
         imageCropView.setImageBitmap(cropResult.getBitmap());
     }
