@@ -16,9 +16,14 @@ import android.util.Log;
 public class FaceDetectionHelper {
     private static final String TAG = "ziq";
     private int mMaxFaces = 3;
+    private int mHeadMultiple = 1;
 
-    public CropResult cropBitmapByFace(Bitmap originalBitmap, float cropWidth, float cropHeight, int mMaxFaces){
+    public CropResult cropBitmapByFace(Bitmap originalBitmap, float cropWidth, float cropHeight, int mMaxFaces, int headMultiple){
         this.mMaxFaces = mMaxFaces;
+        // 默认1倍， 刚好一个头的长宽。
+        if(headMultiple > 0){
+            this.mHeadMultiple = headMultiple;
+        }
         return cropBitmapByFace(originalBitmap, cropWidth, cropHeight);
     }
 
@@ -48,10 +53,10 @@ public class FaceDetectionHelper {
             FaceDetector.Face face = faces[i];
             PointF faceCenterPoint = new PointF();
             face.getMidPoint(faceCenterPoint);
-            facesArea.setLeft(faceCenterPoint.x - face.eyesDistance() * 2, 0);
-            facesArea.setTop(faceCenterPoint.y - face.eyesDistance() * 2, 0);
-            facesArea.setRight(faceCenterPoint.x + face.eyesDistance() * 2, mutableBitmap.getWidth());
-            facesArea.setBottom(faceCenterPoint.y + face.eyesDistance() * 2, mutableBitmap.getHeight());
+            facesArea.setLeft(faceCenterPoint.x - face.eyesDistance() * 2 * mHeadMultiple, 0);
+            facesArea.setTop(faceCenterPoint.y - face.eyesDistance() * 2 * mHeadMultiple, 0);
+            facesArea.setRight(faceCenterPoint.x + face.eyesDistance() * 2 * mHeadMultiple, mutableBitmap.getWidth());
+            facesArea.setBottom(faceCenterPoint.y + face.eyesDistance() * 2 * mHeadMultiple, mutableBitmap.getHeight());
         }
 
         Canvas canvas = new Canvas(mutableBitmap);

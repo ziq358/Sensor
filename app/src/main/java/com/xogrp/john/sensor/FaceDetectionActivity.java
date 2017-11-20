@@ -21,13 +21,13 @@ public class FaceDetectionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_face_detection);
         FaceDetectionHelper faceDetectionHelper = new FaceDetectionHelper();
 
-        int id = R.mipmap.imgs;
+        int id = R.mipmap.git1;
 
         ImageView imageView = (ImageView) findViewById(R.id.image);
         imageView.setBackgroundResource(id);
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.imgs);
-        FaceDetectionHelper.CropResult cropResult = faceDetectionHelper.cropBitmapByFace(bitmap, 400, 400, 5);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), id);
+        FaceDetectionHelper.CropResult cropResult = faceDetectionHelper.cropBitmapByFace(bitmap, 400, 400, 5, 4);
         ImageView imageCropView = (ImageView) findViewById(R.id.image_crop);
         imageCropView.setImageBitmap(cropResult.getBitmap());
     }
