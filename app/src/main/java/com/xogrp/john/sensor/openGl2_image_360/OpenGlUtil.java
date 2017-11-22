@@ -1,4 +1,4 @@
-package com.xogrp.john.sensor.openGl;
+package com.xogrp.john.sensor.openGl2_image_360;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,8 +7,10 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Created by john on 13/11/2017.
@@ -127,5 +129,32 @@ public class OpenGlUtil {
     }
 
 
+
+    public static String readAssetsTextFile(Context context, String filePath) {
+        InputStream inputStream = null;
+        try {
+            inputStream = context.getResources().getAssets().open(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return getStringFromStream(inputStream);
+    }
+
+    private static String getStringFromStream(InputStream inputStream){
+        if(inputStream==null) return null;
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            reader.close();
+            return sb.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

@@ -1,17 +1,19 @@
 package com.xogrp.john.sensor;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.opengl.Matrix;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
 
-import com.xogrp.john.sensor.openGl.OpenGlUtil;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
+import com.xogrp.john.sensor.openGl2_image_360.OpenGlUtil;
+import com.xogrp.john.sensor.openGl2_image_360.FullViewRenderer;
+import com.xogrp.john.sensor.openGl2_image_360.SphereRenderer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -20,7 +22,11 @@ public class OpenGL2Activity extends Activity {
 
     private static String TAG = "ziq";
     GLSurfaceView glSurfaceView;
+    MyRenderer myRenderer;
     private String filePath="images/texture_360_n.jpg";
+    private static final float sDensity =  Resources.getSystem().getDisplayMetrics().density;
+    private static final float sDamping = 0.2f;
+    GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,157 +34,139 @@ public class OpenGL2Activity extends Activity {
         setContentView(R.layout.activity_open_gl2);
         glSurfaceView = (GLSurfaceView) findViewById(R.id.glSurfaceView);
         glSurfaceView.setEGLContextClientVersion(2);
-        glSurfaceView.setRenderer(new MyRenderer(OpenGlUtil.loadBitmapFromAssets(getBaseContext(), filePath)));
+        myRenderer = new MyRenderer(OpenGlUtil.loadBitmapFromAssets(getBaseContext(), filePath));
+        glSurfaceView.setRenderer(myRenderer);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+
+
+        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener(){
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                myRenderer.getSphereRenderer().setDeltaX(myRenderer.getSphereRenderer().getDeltaX() + distanceX / sDensity * sDamping);
+                myRenderer.getSphereRenderer().setDeltaY(myRenderer.getSphereRenderer().getDeltaY() + distanceY / sDensity * sDamping);
+                return super.onScroll(e1, e2, distanceX, distanceY);
+            }
+        });
+        //使得glSurfaceView的onTouch能够监听ACTION_DOWN以外的事件
+        glSurfaceView.setClickable(true);
+        glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.e(TAG, "onTouch: "+motionEvent.toString());
+                return gestureDetector.onTouchEvent(motionEvent);
+            }
+        });
     }
 
+
+
+
     class MyRenderer implements GLSurfaceView.Renderer {
-        protected int surfaceWidth,surfaceHeight;
-        Bitmap bitmap;
+        private int surfaceWidth,surfaceHeight;
 
-        private int imageTextureId;
-        private int imageSize[];
+        private int[] frameBuffers = null;
+        private int[] frameBufferTextures = null;
 
-        private int mProgramId;
-        private String mVertexShader = "attribute vec4 aPosition;\n" +
-                                        "attribute vec4 aTextureCoord;\n" +
-                                        "varying vec2 vTextureCoord;\n" +
-                                        "uniform mat4 uMVPMatrix;\n" +
-                                        "void main() {\n" +
-                                        "  gl_Position = uMVPMatrix * aPosition;\n" +
-                                        "  vTextureCoord = aTextureCoord.xy;\n" +
-                                        "}";
+        FullViewRenderer mFullViewRenderer;
+        SphereRenderer mSphereRenderer;
 
-        private String mFragmentShader =    "precision mediump float;\n" +
-                                            "varying vec2 vTextureCoord;\n" +
-                                            "uniform sampler2D sTexture;\n" +
-                                            "void main() {\n" +
-                                            "    gl_FragColor=texture2D(sTexture, vTextureCoord);\n" +
-                                            "}";
+        MyRenderer(Bitmap bitmap) {
+            this.mFullViewRenderer = new FullViewRenderer(bitmap);
+            mSphereRenderer = new SphereRenderer();
+        }
 
-        private int maPositionHandle;
-        private int maTextureCoordinateHandle;
-        private int uMVPMatrixHandle;
-        private int uTextureSamplerHandle;
-
-        private FloatBuffer mVerticesBuffer;
-        private FloatBuffer mTexCoordinateBuffer;
-        private final float TRIANGLES_DATA_CW[] = {
-                -1.0f, -1.0f, 0f, //LD
-                -1.0f, 1.0f, 0f,  //LU
-                1.0f, -1.0f, 0f,  //RD
-                1.0f, 1.0f, 0f    //RU
-        };
-
-        public final float TEXTURE_NO_ROTATION[] = {
-                0.0f, 1.0f,
-                0.0f, 0.0f,
-                1.0f, 1.0f,
-                1.0f, 0.0f
-        };
-
-        protected float[] projectionMatrix = new float[16];
-
-
-        public MyRenderer(Bitmap bitmap) {
-            this.bitmap = bitmap;
-            mVerticesBuffer =ByteBuffer.allocateDirect(
-                    TRIANGLES_DATA_CW.length * 4)
-                    .order(ByteOrder.nativeOrder())
-                    .asFloatBuffer()
-                    .put(TRIANGLES_DATA_CW);
-            mVerticesBuffer.position(0);
-
-            mTexCoordinateBuffer =ByteBuffer.allocateDirect(
-                    TEXTURE_NO_ROTATION.length * 4)
-                    .order(ByteOrder.nativeOrder())
-                    .asFloatBuffer()
-                    .put(TEXTURE_NO_ROTATION);
-            mTexCoordinateBuffer.position(0);
+        public SphereRenderer getSphereRenderer() {
+            return mSphereRenderer;
         }
 
         @Override
         public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
-
-            imageTextureId = OpenGlUtil.getTextureFromBitmap(bitmap, imageSize);
-
-            mProgramId = OpenGlUtil.createProgram(mVertexShader, mFragmentShader);
-            if (mProgramId == 0) {
-                return;
-            }
-            maPositionHandle = GLES20.glGetAttribLocation(mProgramId, "aPosition");
-            OpenGlUtil.checkGlError("glGetAttribLocation aPosition");
-            if (maPositionHandle == -1) {
-                throw new RuntimeException("Could not get attrib location for aPosition");
-            }
-            maTextureCoordinateHandle = GLES20.glGetAttribLocation(mProgramId, "aTextureCoord");
-            OpenGlUtil.checkGlError("glGetAttribLocation aTextureCoord");
-            if (maTextureCoordinateHandle == -1) {
-                throw new RuntimeException("Could not get attrib location for aTextureCoord");
-            }
-
-            uTextureSamplerHandle= GLES20.glGetUniformLocation(mProgramId,"sTexture");
-            OpenGlUtil.checkGlError("glGetUniformLocation uniform sTexture");
-
-            uMVPMatrixHandle=GLES20.glGetUniformLocation(mProgramId,"uMVPMatrix");
-            OpenGlUtil.checkGlError("glGetUniformLocation uMVPMatrix");
-
-
-
+            mFullViewRenderer.onSurfaceCreated(gl10, eglConfig);
+            mSphereRenderer.onSurfaceCreated(gl10, eglConfig);
         }
 
         @Override
         public void onSurfaceChanged(GL10 gl10, int surfaceWidth, int surfaceHeight) {
             this.surfaceWidth = surfaceWidth;
             this.surfaceHeight = surfaceHeight;
+
+            mFullViewRenderer.onSurfaceChanged(gl10, surfaceWidth, surfaceHeight);
+            mSphereRenderer.onSurfaceChanged(gl10, surfaceWidth, surfaceHeight);
+
+
+            if(frameBuffers != null){
+                destroyFrameBuffers();
+            }
+
+            if (frameBuffers == null) {
+                frameBuffers = new int[1];
+                frameBufferTextures = new int[1];
+                GLES20.glGenFramebuffers(1, frameBuffers, 0);
+                GLES20.glGenTextures(1, frameBufferTextures, 0);
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, frameBufferTextures[0]);
+                GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, surfaceWidth, surfaceHeight, 0,
+                        GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                        GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                        GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                        GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                        GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
+
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBuffers[0]);
+                GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
+                        GLES20.GL_TEXTURE_2D, frameBufferTextures[0], 0);
+
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+            }
+
         }
 
         @Override
         public void onDrawFrame(GL10 gl10) {
-
-            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);//黑色背景
+            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             GLES20.glClear( GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
 
             GLES20.glFrontFace(GLES20.GL_CW);
             GLES20.glCullFace(GLES20.GL_BACK);
             GLES20.glEnable(GLES20.GL_CULL_FACE);
 
-            GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
+            GLES20.glViewport(0, 0, surfaceWidth, surfaceHeight);
+            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBuffers[0]);
+            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            mFullViewRenderer.onDrawFrame(0);
+            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 
-            GLES20.glEnable(GLES20.GL_BLEND);
-            GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+            GLES20.glViewport(0, 0 ,surfaceWidth, surfaceHeight);
+            mSphereRenderer.onDrawFrame(frameBufferTextures[0]);
 
-            GLES20.glUseProgram(mProgramId);
-            OpenGlUtil.checkGlError("glUseProgram");
-
-
-            if (imageTextureId != 0) {
-                GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, imageTextureId);
-                GLES20.glUniform1i(uTextureSamplerHandle, 0);
-            }
-
-            mTexCoordinateBuffer.position(0);
-            GLES20.glVertexAttribPointer(maTextureCoordinateHandle, 2, GLES20.GL_FLOAT, false, 0, mTexCoordinateBuffer);
-            OpenGlUtil.checkGlError("glVertexAttribPointer maTextureHandle");
-            GLES20.glEnableVertexAttribArray(maTextureCoordinateHandle);
-            OpenGlUtil.checkGlError("glEnableVertexAttribArray maTextureHandle");
-
-            mVerticesBuffer.position(0);
-            GLES20.glVertexAttribPointer(maPositionHandle, 3, GLES20.GL_FLOAT, false, 0, mVerticesBuffer);
-            OpenGlUtil.checkGlError("glVertexAttribPointer maPosition");
-            GLES20.glEnableVertexAttribArray(maPositionHandle);
-            OpenGlUtil.checkGlError("glEnableVertexAttribArray maPositionHandle");
-
-            Matrix.setIdentityM(projectionMatrix,0);
-            GLES20.glUniformMatrix4fv(uMVPMatrixHandle, 1, false, projectionMatrix, 0);
-
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
-
-            GLES20.glDisable(GLES20.GL_BLEND);
             GLES20.glDisable(GLES20.GL_CULL_FACE);
+        }
+
+        public void onDestry(){
+            mFullViewRenderer.onDestry();
+            mSphereRenderer.onDestry();
+            destroyFrameBuffers();
+        }
+
+        private void destroyFrameBuffers() {
+            if (frameBufferTextures != null) {
+                GLES20.glDeleteTextures(frameBufferTextures.length, frameBufferTextures, 0);
+                frameBufferTextures = null;
+            }
+            if (frameBuffers != null) {
+                GLES20.glDeleteFramebuffers(frameBuffers.length, frameBuffers, 0);
+                frameBuffers = null;
+            }
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        myRenderer.onDestry();
+        super.onDestroy();
+    }
 }
