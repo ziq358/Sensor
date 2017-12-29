@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         dataList.add(new Model("OpenGl2", OpenGL2Activity.class));
         dataList.add(new Model("Wifi", WifiActivity.class));
         dataList.add(new Model("人脸识别", FaceDetectionActivity.class));
+        dataList.add(new Model("拖动 dragger", DraggerActivity.class));
         return dataList;
     }
 

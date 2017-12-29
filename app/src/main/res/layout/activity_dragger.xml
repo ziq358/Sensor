@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.xogrp.john.sensor.view.DraggerViewGroup
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray"
+        >
+
+    </FrameLayout>
+    <TextView
+        android:id="@+id/dragger_text"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="dragger me"
+        android:background="@android:color/white"
+        />
+</com.xogrp.john.sensor.view.DraggerViewGroup>

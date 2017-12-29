@@ -170,8 +170,8 @@
 
         <!-- 极光推送 -->
 
-        <activity android:name=".JniTestActivity">
-        </activity>
+        <activity android:name=".JniTestActivity"/>
+        <activity android:name=".DraggerActivity"/>
         <activity
             android:name=".DrawableActivity"
             android:label="@string/title_activity_drawable"
