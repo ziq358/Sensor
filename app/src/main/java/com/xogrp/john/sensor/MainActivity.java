@@ -44,12 +44,13 @@ public class MainActivity extends AppCompatActivity {
         dataList.add(new Model("Google 地图", GoogleMapViewActivity.class));
         dataList.add(new Model("百度 地图", BaiduMapActivity.class));
         dataList.add(new Model("JNI", JniTestActivity.class));
-        dataList.add(new Model("Drawable", DrawableActivity.class));
         dataList.add(new Model("OpenGl", OpenglActivity.class));
         dataList.add(new Model("OpenGl2", OpenGL2Activity.class));
         dataList.add(new Model("Wifi", WifiActivity.class));
         dataList.add(new Model("人脸识别", FaceDetectionActivity.class));
         dataList.add(new Model("拖动 dragger", DraggerActivity.class));
+        dataList.add(new Model("Drawable", DrawableActivity.class));
+        dataList.add(new Model("Path 绘制", PathOnDrawActivity.class));
         return dataList;
     }
 

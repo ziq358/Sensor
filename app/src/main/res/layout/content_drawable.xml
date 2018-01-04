@@ -15,10 +15,6 @@
         android:orientation="vertical"
         >
 
-        <com.xogrp.john.sensor.view.CanvasView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"/>
-
         <ImageView
             android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
