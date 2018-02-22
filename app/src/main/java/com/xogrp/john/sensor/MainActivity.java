@@ -1,8 +1,13 @@
 package com.xogrp.john.sensor;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +25,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private ListView mlist;
-
+    private static final String TAG = "ziq";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e(TAG, "MainActivity onCreate: 1");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mlist = (ListView) findViewById(R.id.list_activity);
@@ -35,6 +41,109 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        Log.e(TAG, "MainActivity onCreate: 2");// 没有调用
+        super.onCreate(savedInstanceState, persistentState);
+    }
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        Log.e(TAG, "MainActivity onCreateView: name");//多次调用
+        return super.onCreateView(name, context, attrs);
+    }
+
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        Log.e(TAG, "MainActivity onCreateView: parent");//多次调用
+        return super.onCreateView(parent, name, context, attrs);
+    }
+    @Override
+    protected void onRestart() {
+        Log.e(TAG, "MainActivity onRestart: ");
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStart() {
+        Log.e(TAG, "MainActivity onStart: ");
+        super.onStart();
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        Log.e(TAG, "MainActivity onPostCreate: 1");
+        super.onPostCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        Log.e(TAG, "MainActivity onResume: ");
+        super.onResume();
+    }
+
+    @Override
+    protected void onPostResume() {
+        Log.e(TAG, "MainActivity onPostResume: ");
+        super.onPostResume();
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        Log.e(TAG, "MainActivity onAttachedToWindow: ");
+        super.onAttachedToWindow();
+    }
+
+    @Nullable
+    @Override
+    public View onCreatePanelView(int featureId) {
+        Log.e(TAG, "MainActivity onCreatePanelView: ");
+        return super.onCreatePanelView(featureId);
+    }
+
+    @Override
+    protected void onPause() {
+        Log.e(TAG, "MainActivity onPause: ");
+        super.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.e(TAG, "MainActivity onSaveInstanceState: ");
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStop() {
+        Log.e(TAG, "MainActivity onStop: ");
+        super.onStop();
+    }
+
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        Log.e(TAG, "MainActivity onPostCreate: 2");//没有调用
+        super.onPostCreate(savedInstanceState, persistentState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.e(TAG, "MainActivity onRestoreInstanceState: ");
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.e(TAG, "MainActivity onDestroy: ");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        Log.e(TAG, "MainActivity onDetachedFromWindow: ");
+        super.onDetachedFromWindow();
     }
 
     private List<Model> getData(){
@@ -51,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
         dataList.add(new Model("拖动 dragger", DraggerActivity.class));
         dataList.add(new Model("Drawable", DrawableActivity.class));
         dataList.add(new Model("Path 绘制", PathOnDrawActivity.class));
+        dataList.add(new Model("ContentProvider", ContentProviderTestActivity.class));
         return dataList;
     }
 
