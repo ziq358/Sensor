@@ -184,6 +184,7 @@
         <activity android:name=".FaceDetectionActivity" />
         <activity android:name=".PathOnDrawActivity"></activity>
         <activity android:name=".ContentProviderTestActivity"></activity>
+        <activity android:name=".FragmentStackActivity"></activity>
 
         <provider
             android:authorities="com.xogrp.john.sensor.MusicProvider"

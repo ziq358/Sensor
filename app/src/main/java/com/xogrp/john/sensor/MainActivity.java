@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
         dataList.add(new Model("Drawable", DrawableActivity.class));
         dataList.add(new Model("Path 绘制", PathOnDrawActivity.class));
         dataList.add(new Model("ContentProvider", ContentProviderTestActivity.class));
+        dataList.add(new Model("FragmentStackActivity", FragmentStackActivity.class));
         return dataList;
     }
 
