@@ -188,7 +188,11 @@
         <provider
             android:authorities="com.xogrp.john.sensor.MusicProvider"
             android:name=".contentProvider.MusicContentProvider"
-            android:exported="true" />
+            android:exported="true"
+
+            android:process=":core"
+            android:multiprocess="true"
+            />
 
 
     </application>

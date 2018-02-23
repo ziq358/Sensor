@@ -24,7 +24,14 @@ public class MusicContentProvider extends ContentProvider{
 
     @Override
     public boolean onCreate() {
-        Log.e(TAG, "onCreate: ");
+        Log.e(TAG, "MusicContentProvider onCreate: "+android.os.Process.myPid());
+
+        //android:process=":core"
+        //android:multiprocess="true"
+        // provider不会随应用的启动而加载，当调用到provider的时候才会加载，
+        // 加载时provider是在调用者的进程中初始化的。
+        // 这时候可能定义provider的  core进程还没有启动。其他app 调用时，core进程会启动
+
         for (int i = 0; i < 3; i++) {
             dataList.add(new MusicData("title "+i, "content "+i));
         }
