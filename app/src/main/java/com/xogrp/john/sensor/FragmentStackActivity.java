@@ -35,7 +35,6 @@ public class FragmentStackActivity extends AppCompatActivity implements View.OnC
         switch (v.getId()){
             case R.id.add_a:
                 transaction.add(R.id.content1, new FragmentA(), "fragmentA");
-                transaction.addToBackStack("fragmentATransaction");
                 transaction.commitAllowingStateLoss();
                 break;
             case R.id.add_b:
@@ -55,7 +54,6 @@ public class FragmentStackActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.remove:
                 transaction.remove(manager.findFragmentById(R.id.content1));
-                transaction.addToBackStack("fragmentRemove");
                 transaction.commitAllowingStateLoss();
                 break;
         }
