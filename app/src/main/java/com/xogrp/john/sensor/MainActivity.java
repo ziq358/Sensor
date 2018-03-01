@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
         dataList.add(new Model("Path 绘制", PathOnDrawActivity.class));
         dataList.add(new Model("ContentProvider", ContentProviderTestActivity.class));
         dataList.add(new Model("FragmentStackActivity", FragmentStackActivity.class));
+        dataList.add(new Model("MatrixCamera", MatrixCameraActivity.class));
         return dataList;
     }
 
