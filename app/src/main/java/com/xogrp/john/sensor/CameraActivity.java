@@ -60,13 +60,15 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.take_photo:
+                break;
+            case R.id.take_photo_intent:
                 //intent 调用的不需要 声明camera权限
                 Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 Uri imageUri = Uri.fromFile(getFile("sensor_camera.jpg"));
                 takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 startActivityForResult(takePhotoIntent, TAKE_PHOTO_CODE);
                 break;
-            case R.id.take_video:
+            case R.id.take_video_intent:
                 Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 Uri videoUri = Uri.fromFile(getFile("sensor_camera.mp4"));
                 takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
