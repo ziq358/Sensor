@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.xogrp.john.sensor">
 
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -186,6 +189,7 @@
         <activity android:name=".ContentProviderTestActivity"></activity>
         <activity android:name=".FragmentStackActivity"></activity>
         <activity android:name=".MatrixCameraActivity" />
+        <activity android:name=".CameraActivity" />
         <provider
             android:authorities="com.xogrp.john.sensor.MusicProvider"
             android:name=".contentProvider.MusicContentProvider"
