@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -60,6 +62,21 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.take_photo:
+                mCamera.takePicture(null, null, new android.hardware.Camera.PictureCallback() {
+                    @Override
+                    public void onPictureTaken(byte[] data, android.hardware.Camera camera) {
+                        File outputFile = getFile("take_photo.jpg");
+                        if(outputFile != null){
+                            try {
+                                FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
+                                fileOutputStream.write(data);
+                                fileOutputStream.close();
+                            } catch (FileNotFoundException e) {
+                            } catch (IOException e) {
+                            }
+                        }
+                    }
+                });
                 break;
             case R.id.take_photo_intent:
                 //intent 调用的不需要 声明camera权限
