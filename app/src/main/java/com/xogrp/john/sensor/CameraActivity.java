@@ -2,9 +2,8 @@ package com.xogrp.john.sensor;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Camera;
+import android.content.res.Configuration;
 import android.graphics.Rect;
-import android.hardware.camera2.CameraDevice;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -58,6 +57,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         mSurfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
+                android.hardware.Camera.Parameters parameters = mCamera.getParameters();
+
+                initPreviewSize(mCamera, mSurfaceView.getWidth(), mSurfaceView.getHeight());
+                initPictureSize(mCamera, mSurfaceView.getWidth(), mSurfaceView.getHeight());
+
                 mSurfaceHolder = holder;
                 try {
                     mCamera.setPreviewDisplay(holder);
@@ -69,6 +73,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
                 mSurfaceHolder = holder;
+                mCamera.stopPreview();
+                try {
+                    mCamera.setPreviewDisplay(holder);
+                    mCamera.startPreview();
+                } catch (IOException e) {
+                }
             }
 
             @Override
@@ -124,7 +134,71 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         return x;
     }
 
-    @Override
+    private void initPictureSize(android.hardware.Camera camera, int surfaceWidth, int surfaceHeight){
+        android.hardware.Camera.Parameters parameters = camera.getParameters();
+
+        Log.e("ziq", "initPictureSize: ---"+parameters.getPictureSize().width+" "+parameters.getPictureSize().height);
+        android.hardware.Camera.Size size = getCloselySize(isPortrait(), surfaceWidth, surfaceHeight, parameters.getSupportedPictureSizes());
+        Log.e("ziq", "initPictureSize: --- target "+size.width+" "+size.height);
+        parameters.setPictureSize(size.width, size.height);
+        camera.setParameters(parameters);
+    }
+
+    private void initPreviewSize(android.hardware.Camera camera, int surfaceWidth, int surfaceHeight){
+        android.hardware.Camera.Parameters parameters = camera.getParameters();
+        Log.e("ziq", "initPreviewSize: ---"+parameters.getPreviewSize().width+" "+parameters.getPreviewSize().height);
+        android.hardware.Camera.Size size = getCloselySize(isPortrait(), surfaceWidth, surfaceHeight, parameters.getSupportedPreviewSizes());
+        Log.e("ziq", "initPreviewSize: --- target "+size.width+" "+size.height);
+        parameters.setPreviewSize(size.width, size.height);
+        camera.setParameters(parameters);
+    }
+
+    public android.hardware.Camera.Size getCloselySize(boolean isPortrait, int surfaceWidth, int surfaceHeight, List<android.hardware.Camera.Size> sizeList) {
+        Log.e("ziq", "getCloselySize: -----"+surfaceWidth+" "+surfaceHeight);
+        android.hardware.Camera.Size targetSize = null;
+        int reqTmpWidth;
+        int reqTmpHeight;
+        // 当屏幕为垂直的时候需要把宽高值进行调换，保证宽大于高
+        if (isPortrait) {
+            reqTmpWidth = surfaceHeight;
+            reqTmpHeight = surfaceWidth;
+        } else {
+            reqTmpWidth = surfaceWidth;
+            reqTmpHeight = surfaceHeight;
+        }
+        if(sizeList != null){
+            for (android.hardware.Camera.Size size:sizeList){
+                Log.e("ziq", "getCloselySize: "+size.width+" "+size.height);
+                if((size.width == reqTmpWidth) && (size.height == reqTmpHeight)){
+                    return size;
+                }
+            }
+            // 得到与传入的宽高比最接近的size
+            float reqRatio = ((float) reqTmpWidth) / reqTmpHeight;
+            float curRatio, deltaRatio;
+            float deltaRatioMin = Float.MAX_VALUE;
+
+            for (android.hardware.Camera.Size size : sizeList) {
+                curRatio = ((float) size.width) / size.height;
+                deltaRatio = Math.abs(reqRatio - curRatio);
+                if (deltaRatio < deltaRatioMin) {
+                    deltaRatioMin = deltaRatio;
+                    targetSize = size;
+                }
+            }
+
+        }
+        return targetSize;
+    }
+
+    //activity 方向
+    private boolean isPortrait(){
+        int orientation = getResources().getConfiguration().orientation;
+        return orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+
+
+        @Override
     protected void onResume() {
         super.onResume();
         mCamera = android.hardware.Camera.open();//open the camera for the application
