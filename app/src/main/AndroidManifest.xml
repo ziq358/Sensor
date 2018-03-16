@@ -191,6 +191,7 @@
         <activity android:name=".FragmentStackActivity"></activity>
         <activity android:name=".MatrixCameraActivity" />
         <activity android:name=".CameraActivity"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
             />
         <provider
             android:authorities="com.xogrp.john.sensor.MusicProvider"

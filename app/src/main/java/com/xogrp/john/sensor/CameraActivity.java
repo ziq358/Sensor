@@ -3,6 +3,9 @@ package com.xogrp.john.sensor;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
@@ -33,11 +36,12 @@ import java.util.List;
  * Created by john on 15/03/2018.
  */
 
-public class CameraActivity extends AppCompatActivity implements View.OnClickListener{
+public class CameraActivity extends Activity implements View.OnClickListener{
     private static final int AREA_SIZE = 100;
     SurfaceView mSurfaceView;
     SurfaceHolder mSurfaceHolder;
     android.hardware.Camera mCamera;
+    int mCameraRestOrientation;
     Button takeVideoBtn;
     private MediaRecorder mMediaRecorder;
     private boolean isRecording = false;
@@ -154,7 +158,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public android.hardware.Camera.Size getCloselySize(boolean isPortrait, int surfaceWidth, int surfaceHeight, List<android.hardware.Camera.Size> sizeList) {
-        Log.e("ziq", "getCloselySize: -----"+surfaceWidth+" "+surfaceHeight);
+        Log.e("ziq", "getCloselySize: ----- surfaceWidth "+surfaceWidth+" surfaceHeight "+surfaceHeight);
         android.hardware.Camera.Size targetSize = null;
         int reqTmpWidth;
         int reqTmpHeight;
@@ -216,9 +220,16 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                         File outputFile = getFile("take_photo.jpg");
                         if(outputFile != null){
                             try {
+                                //对原来的图片进行，， 角度旋转，，使得与预览效果一样，解决预览 角度 与实际图片 角度不同的问题
                                 FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
-                                fileOutputStream.write(data);
+                                Bitmap bitmap= BitmapFactory.decodeByteArray(data,0,data.length);
+                                Matrix matrix = new Matrix();
+                                matrix.postRotate(mCameraRestOrientation);
+                                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
                                 fileOutputStream.close();
+                                mCamera.stopPreview();
+                                mCamera.startPreview();
                             } catch (FileNotFoundException e) {
                             } catch (IOException e) {
                             }
@@ -332,6 +343,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         } else {  // back-facing
             result = (info.orientation - degrees + 360) % 360;
         }
+        mCameraRestOrientation = result;
+        Log.e("ziq", "mCameraRestOrientation: "+mCameraRestOrientation);
         camera.setDisplayOrientation(result);
     }
 
