@@ -1,7 +1,9 @@
 package com.xogrp.john.sensor;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Camera;
+import android.graphics.Rect;
 import android.hardware.camera2.CameraDevice;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
@@ -12,6 +14,9 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -22,12 +27,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by john on 15/03/2018.
  */
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener{
+    private static final int AREA_SIZE = 100;
     SurfaceView mSurfaceView;
     SurfaceHolder mSurfaceHolder;
     android.hardware.Camera mCamera;
@@ -46,7 +54,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         takeVideoBtn.setOnClickListener(this);
         findViewById(R.id.take_photo_intent).setOnClickListener(this);
         findViewById(R.id.take_video_intent).setOnClickListener(this);
-        mCamera = android.hardware.Camera.open();
+
         mSurfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
@@ -68,6 +76,60 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
             }
         });
+
+        mSurfaceView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mCamera.cancelAutoFocus();
+                android.hardware.Camera.Parameters parameters = mCamera.getParameters();
+                parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_AUTO);
+                float touchX = (event.getX() / mSurfaceView.getWidth()) * 2000 - 1000;
+                float touchY = (event.getY() / mSurfaceView.getHeight()) * 2000 - 1000;
+                int left = clamp((int) touchX - AREA_SIZE / 2, -1000, 1000);
+                int right = clamp(left + AREA_SIZE, -1000, 1000);
+                int top = clamp((int) touchY - AREA_SIZE / 2, -1000, 1000);
+                int bottom = clamp(top + AREA_SIZE, -1000, 1000);
+                Rect rect = new Rect(left, top, right, bottom);
+
+                if (parameters.getMaxNumFocusAreas() > 0) {
+                    List<android.hardware.Camera.Area> areaList = new ArrayList<android.hardware.Camera.Area>();
+                    areaList.add(new android.hardware.Camera.Area(rect, 1000));
+                    parameters.setFocusAreas(areaList);
+                }
+
+                if (parameters.getMaxNumMeteringAreas() > 0) {
+                    List<android.hardware.Camera.Area> areaList = new ArrayList<android.hardware.Camera.Area>();
+                    areaList.add(new android.hardware.Camera.Area(rect, 1000));
+                    parameters.setMeteringAreas(areaList);
+                }
+                mCamera.setParameters(parameters);
+                mCamera.autoFocus(new android.hardware.Camera.AutoFocusCallback() {
+                    @Override
+                    public void onAutoFocus(boolean success, android.hardware.Camera camera) {
+                        Toast.makeText(CameraActivity.this, "onAutoFocus:\n" + success, Toast.LENGTH_LONG).show();
+                    }
+                });
+                return false;
+            }
+        });
+    }
+
+    private int clamp(int x, int min, int max) {//保证坐标必须在min到max之内，否则异常
+        if (x > max) {
+            return max;
+        }
+        if (x < min) {
+            return min;
+        }
+        return x;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCamera = android.hardware.Camera.open();//open the camera for the application
+        setCameraDisplayOrientation(this,0, mCamera);
+
     }
 
     @Override
@@ -140,11 +202,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         return true;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mCamera = android.hardware.Camera.open();//open the camera for the application
-    }
+
 
     @Override
     protected void onPause() {
@@ -180,6 +238,30 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         return new File(dir, fileName);
     }
 
+    public void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
+        android.hardware.Camera.CameraInfo info =
+                new android.hardware.Camera.CameraInfo();
+        android.hardware.Camera.getCameraInfo(cameraId, info);
+        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0: degrees = 0; break;
+            case Surface.ROTATION_90: degrees = 90; break;
+            case Surface.ROTATION_180: degrees = 180; break;
+            case Surface.ROTATION_270: degrees = 270; break;
+        }
+
+        int result;
+        if (info.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+        camera.setDisplayOrientation(result);
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -202,4 +284,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
     }
+
+
 }

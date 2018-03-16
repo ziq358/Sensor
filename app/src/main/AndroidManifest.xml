@@ -190,12 +190,12 @@
         <activity android:name=".ContentProviderTestActivity"></activity>
         <activity android:name=".FragmentStackActivity"></activity>
         <activity android:name=".MatrixCameraActivity" />
-        <activity android:name=".CameraActivity" />
+        <activity android:name=".CameraActivity"
+            />
         <provider
             android:authorities="com.xogrp.john.sensor.MusicProvider"
             android:name=".contentProvider.MusicContentProvider"
             android:exported="true"
-
             android:process=":core"
             android:multiprocess="true"
             />
