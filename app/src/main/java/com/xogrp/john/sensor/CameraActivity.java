@@ -278,6 +278,7 @@ public class CameraActivity extends Activity implements View.OnClickListener{
         mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
         mMediaRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
         mMediaRecorder.setOutputFile(getFile("take_video.mp4").toString());
+        mMediaRecorder.setOrientationHint(mCameraRestOrientation);
         try {
             mMediaRecorder.prepare();
         } catch (IOException e) {
