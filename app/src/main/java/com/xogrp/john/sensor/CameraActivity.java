@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -55,7 +56,9 @@ public class CameraActivity extends Activity implements View.OnClickListener{
         findViewById(R.id.take_photo).setOnClickListener(this);
         takeVideoBtn = (Button) findViewById(R.id.take_video);
         takeVideoBtn.setOnClickListener(this);
-        findViewById(R.id.take_photo_intent).setOnClickListener(this);
+        findViewById(R.id.effect_negative).setOnClickListener(this);
+        findViewById(R.id.effect_none).setOnClickListener(this);
+        findViewById(R.id.take_video_intent).setOnClickListener(this);
         findViewById(R.id.take_video_intent).setOnClickListener(this);
 
         mSurfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
@@ -236,6 +239,16 @@ public class CameraActivity extends Activity implements View.OnClickListener{
                         }
                     }
                 });
+                break;
+            case R.id.effect_negative:
+                android.hardware.Camera.Parameters parametersN = mCamera.getParameters();
+                parametersN.setColorEffect(Camera.Parameters.EFFECT_NEGATIVE);
+                mCamera.setParameters(parametersN);
+                break;
+            case R.id.effect_none:
+                android.hardware.Camera.Parameters parameters = mCamera.getParameters();
+                parameters.setColorEffect(Camera.Parameters.EFFECT_NONE);
+                mCamera.setParameters(parameters);
                 break;
             case R.id.take_video:
                 if(isRecording){
