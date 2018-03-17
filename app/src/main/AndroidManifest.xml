@@ -193,6 +193,9 @@
         <activity android:name=".CameraActivity"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
             />
+        <activity android:name=".CameraGLActivity"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+            />
         <provider
             android:authorities="com.xogrp.john.sensor.MusicProvider"
             android:name=".contentProvider.MusicContentProvider"

@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
         dataList.add(new Model("FragmentStackActivity", FragmentStackActivity.class));
         dataList.add(new Model("MatrixCamera", MatrixCameraActivity.class));
         dataList.add(new Model("相机", CameraActivity.class));
+        dataList.add(new Model("相机滤镜", CameraGLActivity.class));
         return dataList;
     }
 

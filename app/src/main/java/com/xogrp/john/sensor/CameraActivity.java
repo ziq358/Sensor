@@ -1,6 +1,7 @@
 package com.xogrp.john.sensor;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -38,7 +39,7 @@ import java.util.List;
  */
 
 public class CameraActivity extends Activity implements View.OnClickListener{
-    private static final int AREA_SIZE = 100;
+    public static final int AREA_SIZE = 100;
     SurfaceView mSurfaceView;
     SurfaceHolder mSurfaceHolder;
     android.hardware.Camera mCamera;
@@ -64,10 +65,8 @@ public class CameraActivity extends Activity implements View.OnClickListener{
         mSurfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                android.hardware.Camera.Parameters parameters = mCamera.getParameters();
-
-                initPreviewSize(mCamera, mSurfaceView.getWidth(), mSurfaceView.getHeight());
-                initPictureSize(mCamera, mSurfaceView.getWidth(), mSurfaceView.getHeight());
+                initPreviewSize(CameraActivity.this, mCamera, mSurfaceView.getWidth(), mSurfaceView.getHeight());
+                initPictureSize(CameraActivity.this, mCamera, mSurfaceView.getWidth(), mSurfaceView.getHeight());
 
                 mSurfaceHolder = holder;
                 try {
@@ -97,41 +96,45 @@ public class CameraActivity extends Activity implements View.OnClickListener{
         mSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                mCamera.cancelAutoFocus();
-                android.hardware.Camera.Parameters parameters = mCamera.getParameters();
-                parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_AUTO);
-                float touchX = (event.getX() / mSurfaceView.getWidth()) * 2000 - 1000;
-                float touchY = (event.getY() / mSurfaceView.getHeight()) * 2000 - 1000;
-                int left = clamp((int) touchX - AREA_SIZE / 2, -1000, 1000);
-                int right = clamp(left + AREA_SIZE, -1000, 1000);
-                int top = clamp((int) touchY - AREA_SIZE / 2, -1000, 1000);
-                int bottom = clamp(top + AREA_SIZE, -1000, 1000);
-                Rect rect = new Rect(left, top, right, bottom);
-
-                if (parameters.getMaxNumFocusAreas() > 0) {
-                    List<android.hardware.Camera.Area> areaList = new ArrayList<android.hardware.Camera.Area>();
-                    areaList.add(new android.hardware.Camera.Area(rect, 1000));
-                    parameters.setFocusAreas(areaList);
-                }
-
-                if (parameters.getMaxNumMeteringAreas() > 0) {
-                    List<android.hardware.Camera.Area> areaList = new ArrayList<android.hardware.Camera.Area>();
-                    areaList.add(new android.hardware.Camera.Area(rect, 1000));
-                    parameters.setMeteringAreas(areaList);
-                }
-                mCamera.setParameters(parameters);
-                mCamera.autoFocus(new android.hardware.Camera.AutoFocusCallback() {
-                    @Override
-                    public void onAutoFocus(boolean success, android.hardware.Camera camera) {
-                        Toast.makeText(CameraActivity.this, "onAutoFocus:\n" + success, Toast.LENGTH_LONG).show();
-                    }
-                });
+                doFocus(mCamera, event, mSurfaceView.getWidth(),mSurfaceView.getHeight(),CameraActivity.this );
                 return false;
             }
         });
     }
 
-    private int clamp(int x, int min, int max) {//保证坐标必须在min到max之内，否则异常
+    public static void doFocus(Camera mCamera, MotionEvent event, int surfaceWidth, int surfaceHeight, final Context context){
+        mCamera.cancelAutoFocus();
+        android.hardware.Camera.Parameters parameters = mCamera.getParameters();
+        parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_AUTO);
+        float touchX = (event.getX() / surfaceWidth) * 2000 - 1000;
+        float touchY = (event.getY() / surfaceHeight) * 2000 - 1000;
+        int left = clamp((int) touchX - AREA_SIZE / 2, -1000, 1000);
+        int right = clamp(left + AREA_SIZE, -1000, 1000);
+        int top = clamp((int) touchY - AREA_SIZE / 2, -1000, 1000);
+        int bottom = clamp(top + AREA_SIZE, -1000, 1000);
+        Rect rect = new Rect(left, top, right, bottom);
+
+        if (parameters.getMaxNumFocusAreas() > 0) {
+            List<android.hardware.Camera.Area> areaList = new ArrayList<android.hardware.Camera.Area>();
+            areaList.add(new android.hardware.Camera.Area(rect, 1000));
+            parameters.setFocusAreas(areaList);
+        }
+
+        if (parameters.getMaxNumMeteringAreas() > 0) {
+            List<android.hardware.Camera.Area> areaList = new ArrayList<android.hardware.Camera.Area>();
+            areaList.add(new android.hardware.Camera.Area(rect, 1000));
+            parameters.setMeteringAreas(areaList);
+        }
+        mCamera.setParameters(parameters);
+        mCamera.autoFocus(new android.hardware.Camera.AutoFocusCallback() {
+            @Override
+            public void onAutoFocus(boolean success, android.hardware.Camera camera) {
+                Toast.makeText(context, "onAutoFocus:\n" + success, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public static int clamp(int x, int min, int max) {//保证坐标必须在min到max之内，否则异常
         if (x > max) {
             return max;
         }
@@ -141,26 +144,26 @@ public class CameraActivity extends Activity implements View.OnClickListener{
         return x;
     }
 
-    private void initPictureSize(android.hardware.Camera camera, int surfaceWidth, int surfaceHeight){
+    public static void initPictureSize(Context context, android.hardware.Camera camera, int surfaceWidth, int surfaceHeight){
         android.hardware.Camera.Parameters parameters = camera.getParameters();
 
         Log.e("ziq", "initPictureSize: ---"+parameters.getPictureSize().width+" "+parameters.getPictureSize().height);
-        android.hardware.Camera.Size size = getCloselySize(isPortrait(), surfaceWidth, surfaceHeight, parameters.getSupportedPictureSizes());
+        android.hardware.Camera.Size size = getCloselySize(isPortrait(context), surfaceWidth, surfaceHeight, parameters.getSupportedPictureSizes());
         Log.e("ziq", "initPictureSize: --- target "+size.width+" "+size.height);
         parameters.setPictureSize(size.width, size.height);
         camera.setParameters(parameters);
     }
 
-    private void initPreviewSize(android.hardware.Camera camera, int surfaceWidth, int surfaceHeight){
+    public static void initPreviewSize(Context context, android.hardware.Camera camera, int surfaceWidth, int surfaceHeight){
         android.hardware.Camera.Parameters parameters = camera.getParameters();
         Log.e("ziq", "initPreviewSize: ---"+parameters.getPreviewSize().width+" "+parameters.getPreviewSize().height);
-        android.hardware.Camera.Size size = getCloselySize(isPortrait(), surfaceWidth, surfaceHeight, parameters.getSupportedPreviewSizes());
+        android.hardware.Camera.Size size = getCloselySize(isPortrait(context), surfaceWidth, surfaceHeight, parameters.getSupportedPreviewSizes());
         Log.e("ziq", "initPreviewSize: --- target "+size.width+" "+size.height);
         parameters.setPreviewSize(size.width, size.height);
         camera.setParameters(parameters);
     }
 
-    public android.hardware.Camera.Size getCloselySize(boolean isPortrait, int surfaceWidth, int surfaceHeight, List<android.hardware.Camera.Size> sizeList) {
+    public static android.hardware.Camera.Size getCloselySize(boolean isPortrait, int surfaceWidth, int surfaceHeight, List<android.hardware.Camera.Size> sizeList) {
         Log.e("ziq", "getCloselySize: ----- surfaceWidth "+surfaceWidth+" surfaceHeight "+surfaceHeight);
         android.hardware.Camera.Size targetSize = null;
         int reqTmpWidth;
@@ -199,8 +202,8 @@ public class CameraActivity extends Activity implements View.OnClickListener{
     }
 
     //activity 方向
-    private boolean isPortrait(){
-        int orientation = getResources().getConfiguration().orientation;
+    public static boolean isPortrait(Context context){
+        int orientation = context.getResources().getConfiguration().orientation;
         return orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 
@@ -209,7 +212,7 @@ public class CameraActivity extends Activity implements View.OnClickListener{
     protected void onResume() {
         super.onResume();
         mCamera = android.hardware.Camera.open();//open the camera for the application
-        setCameraDisplayOrientation(this,0, mCamera);
+        mCameraRestOrientation = setCameraDisplayOrientation(this,0, mCamera);
 
     }
 
@@ -329,7 +332,7 @@ public class CameraActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    private File getFile(String fileName){
+    public static File getFile(String fileName){
         File dir = new File(String.format("%s/%s", Environment.getExternalStorageDirectory().getAbsolutePath(), "Sensor"));
         if (!dir.exists()) {
             dir.mkdir();
@@ -337,7 +340,7 @@ public class CameraActivity extends Activity implements View.OnClickListener{
         return new File(dir, fileName);
     }
 
-    public void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
+    public static int setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
         android.hardware.Camera.CameraInfo info =
                 new android.hardware.Camera.CameraInfo();
         android.hardware.Camera.getCameraInfo(cameraId, info);
@@ -357,9 +360,9 @@ public class CameraActivity extends Activity implements View.OnClickListener{
         } else {  // back-facing
             result = (info.orientation - degrees + 360) % 360;
         }
-        mCameraRestOrientation = result;
-        Log.e("ziq", "mCameraRestOrientation: "+mCameraRestOrientation);
+        Log.e("ziq", "mCameraRestOrientation: "+result);
         camera.setDisplayOrientation(result);
+        return result;
     }
 
 
