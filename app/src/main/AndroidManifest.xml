@@ -74,6 +74,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".StandardModelActivity"  android:launchMode="standard" android:taskAffinity="com.test.standard" />
+        <activity android:name=".SingleTopModelActivity"  android:launchMode="singleTop" android:taskAffinity="com.test.singleTop"/>
+        <activity android:name=".SingleTaskModelActivity" android:launchMode="singleTask" android:taskAffinity="com.test.singleTask"/>
+        <activity android:name=".SingleInstanceModelActivity" android:launchMode="singleInstance" android:taskAffinity="com.test.singleInstance"/>
+
         <activity android:name=".SensorActivity" />
         <activity
             android:name=".QRcodeActivity"

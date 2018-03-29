@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "ziq";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e(TAG, "MainActivity onCreate: 1");
+        Log.e(TAG, "MainActivity onCreate: 1 "+this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mlist = (ListView) findViewById(R.id.list_activity);
@@ -60,6 +60,13 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "MainActivity onCreateView: parent");//多次调用
         return super.onCreateView(parent, name, context, attrs);
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.e(TAG, "MainActivity onNewIntent: ");
+        super.onNewIntent(intent);
+    }
+
     @Override
     protected void onRestart() {
         Log.e(TAG, "MainActivity onRestart: ");
@@ -166,6 +173,10 @@ public class MainActivity extends AppCompatActivity {
         dataList.add(new Model("相机", CameraActivity.class));
         dataList.add(new Model("相机滤镜", CameraGLActivity.class));
         dataList.add(new Model("适配", DpiTestActivity.class));
+        dataList.add(new Model("Standard", StandardModelActivity.class));
+        dataList.add(new Model("SingleTop", SingleTopModelActivity.class));
+        dataList.add(new Model("SingleTask", SingleTaskModelActivity.class));
+        dataList.add(new Model("SingleInstance", SingleInstanceModelActivity.class));
         return dataList;
     }
 
