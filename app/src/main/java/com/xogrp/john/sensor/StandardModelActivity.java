@@ -56,9 +56,21 @@ public class StandardModelActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e("ziq", "onStart: "+this);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e("ziq", "onRestart: "+this);
+    }
+
+    @Override
     protected void onResume() {
-        Log.e("ziq", "onResume: "+this);
         super.onResume();
+        Log.e("ziq", "onResume: "+this);
     }
 
     @Override
