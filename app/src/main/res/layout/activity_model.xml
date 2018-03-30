@@ -10,10 +10,11 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         />
-    <Button
+    <com.xogrp.john.sensor.view.CustomBtn
         android:id="@+id/btn_standard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:text="Standard"/>
     <Button
         android:id="@+id/btn_singleTop"
