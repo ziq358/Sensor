@@ -32,4 +32,14 @@
         android:layout_height="wrap_content"
         android:text="SingleInstance"/>
 
+    <Button
+        android:id="@+id/btn_sys_exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="sys_exit"/>
+    <Button
+        android:id="@+id/btn_process_killProcess"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="process_killProcess"/>
 </LinearLayout>

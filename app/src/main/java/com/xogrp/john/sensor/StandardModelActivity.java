@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Process;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -47,6 +48,18 @@ public class StandardModelActivity extends AppCompatActivity {
         findViewById(R.id.btn_singleTop).setOnClickListener(listener);
         findViewById(R.id.btn_singleTask).setOnClickListener(listener);
         findViewById(R.id.btn_singleInstance).setOnClickListener(listener);
+        findViewById(R.id.btn_sys_exit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.exit(0);
+            }
+        });
+        findViewById(R.id.btn_process_killProcess).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Process.killProcess(Process.myPid());
+            }
+        });
     }
 
     @Override
