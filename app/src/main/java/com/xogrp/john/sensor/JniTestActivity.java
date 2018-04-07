@@ -38,7 +38,13 @@ public class JniTestActivity extends AppCompatActivity {
         Paint paint = new Paint();
         Matrix m = new Matrix();
         canvas.drawBitmap(bitmap, m, paint);//生成了了一个bitmap 的副本，不受之后 原bitmap的变化影响
-        ivRoot.setImageBitmap(copyBitmap);
+
+        //也是副本
+        Matrix matrix = new Matrix();
+        matrix.preScale(1, -1); // 实现图片的反转
+        Bitmap reflectionImage = Bitmap.createBitmap(bitmap, 0, bitmap.getHeight()/2 ,bitmap.getWidth(), bitmap.getHeight()/2, matrix, false);
+
+        ivRoot.setImageBitmap(reflectionImage);
         ivResult.setImageBitmap(bitmap);
         findViewById(R.id.gaussBlur).setOnClickListener(new View.OnClickListener() {
             @Override
