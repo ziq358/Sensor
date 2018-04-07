@@ -28,13 +28,20 @@ public class JniTestActivity extends AppCompatActivity {
 
         ivRoot = (ImageView) findViewById(R.id.gaussBlur_root);
         ivResult = (ImageView) findViewById(R.id.gaussBlur_result);
+        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.checklist_default);
+        ivRoot.setImageBitmap(bitmap);
+        ivResult.setImageBitmap(bitmap);
+        findViewById(R.id.gaussBlur).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gaussBlur(ivResult, bitmap);
+            }
+        });
     }
 
     public native String stringFromJNI();
 
-
-    public void gaussBlur(View v) {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.checklist_default);
+    public void gaussBlur(View v, Bitmap bitmap) {
         //调用native方法，传入Bitmap对象，对Bitmap进行高斯迷糊处理
         NdkUtil ndkUtil = new NdkUtil();
         ndkUtil.gaussBlur(bitmap);

@@ -14,13 +14,12 @@
             android:id="@+id/gaussBlur_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@mipmap/checklist_default"
             />
         <Button
+            android:id="@+id/gaussBlur"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:text="高斯模糊 - start"
-            android:onClick="gaussBlur"
             />
         <ImageView
             android:id="@+id/gaussBlur_result"
