@@ -1,6 +1,7 @@
 package com.xogrp.john.sensor;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -8,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -63,7 +66,13 @@ public class FangYiBangActivity extends AppCompatActivity {
 
     public void call() throws java.lang.Exception{
         URL url = new URL("https://sai-pilot.msxiaobing.com/api/Translator/GetResponse?api-version=2018-04-15");
-        String requestBody = "{\"request\":\"你喜欢我妈？\",\"requestType\":\"text\",\"sourcelang\":\"zh-cn\",\"targetlang\":\"en-us\",\"responseType\":\"text\"}";
+//        String requestBody = "{\"request\":\"你喜欢我妈？\",\"requestType\":\"text\",\"sourcelang\":\"zh-cn\",\"targetlang\":\"en-us\",\"responseType\":\"text\"}";
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "media.wav";
+        String filePath2 = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "media2.wav";
+        String fileContent = RecordActivity.encodeBase64File(filePath);
+        RecordActivity.decoderBase64File(fileContent, filePath2);
+        String requestBody = "{\"request\":\""+fileContent+"\",\"requestType\":\"wavaudio\",\"sourcelang\":\"zh-cn\",\"targetlang\":\"en-us\",\"responseType\":\"wavaudioandtext\"}";
+
         String appID = "XIz84k5lya2tboswj9";
         String secret = "0l68wzb9cpastoejfk4hgixqvd7u15nr";
         String userID = "e10adc3949ba59abbe56e057f20f883e";
@@ -71,6 +80,8 @@ public class FangYiBangActivity extends AppCompatActivity {
         String verb = "Post";
         String path = url.getPath();
         String params = url.getQuery();
+
+        System.out.println(requestBody);
 
         String[] paramList = params.split("&");
         String[] headerList = {"x-msxiaoice-request-app-id:" + appID, "x-msxiaoice-request-user-id:" + userID};
@@ -87,6 +98,13 @@ public class FangYiBangActivity extends AppCompatActivity {
         }
         in.close();
         System.out.println(response.toString());
+
+        JSONObject resultJson = new JSONObject(response.toString());
+        if(resultJson.has("audio")){
+            String resultUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "media2result.wav";
+            RecordActivity.decoderBase64File(resultJson.getString("audio"), resultUrl);
+        }
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

@@ -182,6 +182,7 @@
 
         <activity android:name=".JniTestActivity" />
         <activity android:name=".FangYiBangActivity" />
+        <activity android:name=".RecordActivity" />
         <activity android:name=".DraggerActivity" />
         <activity
             android:name=".DrawableActivity"
