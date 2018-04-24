@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.xogrp.john.sensor">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -180,6 +181,7 @@
         <!-- 极光推送 -->
 
         <activity android:name=".JniTestActivity" />
+        <activity android:name=".FangYiBangActivity" />
         <activity android:name=".DraggerActivity" />
         <activity
             android:name=".DrawableActivity"
@@ -221,7 +223,19 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <receiver android:name=".BroadcastReceiver.BootBroadcastReceiver" >
+            <intent-filter >
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
 
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".BroadcastReceiver.ShutdownBroadcastReceiver" >
+            <intent-filter >
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
