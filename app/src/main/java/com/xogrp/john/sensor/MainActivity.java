@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -223,6 +224,51 @@ public class MainActivity extends AppCompatActivity {
 
         String name;
         Class cls;
+    }
+
+    //监听  物理键  长按事件  使用模拟器音量键
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.d(TAG, "onKeyDown ");
+        if( keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
+        {
+            event.startTracking();
+            Log.d(TAG, "onKeyDown "+event.getRepeatCount());
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event)
+    {
+        Log.e(TAG, "onKeyLongPress");
+        if(keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+            Log.d(TAG, "Long press KEYCODE_VOLUME_UP");
+            return true;
+        }
+        else if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+            Log.d(TAG, "Long press KEYCODE_VOLUME_DOWN");
+            return true;
+        }
+        return super.onKeyLongPress(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event)
+    {
+        Log.e(TAG, "onKeyUp");
+        if((event.getFlags() & KeyEvent.FLAG_CANCELED_LONG_PRESS) == 0){
+            if(keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+                Log.e(TAG, "Short press KEYCODE_VOLUME_UP");
+                return true;
+            }
+            else if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+                Log.e(TAG, "Short press KEYCODE_VOLUME_DOWN");
+                return true;
+            }
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
 }
