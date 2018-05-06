@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.jakewharton.butterknife'
 android {
     signingConfigs {
         config {
@@ -54,4 +54,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':myjni')
     compile 'com.squareup.picasso:picasso:2.2.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.jakewharton:butterknife:8.8.1'
 }

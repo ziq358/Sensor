@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Model> getData(){
         List<Model> dataList = new ArrayList<>();
+        dataList.add(new Model("SpannableString", SpannableStringActivity.class));
         dataList.add(new Model("翻译帮", FangYiBangActivity.class));
         dataList.add(new Model("录音", RecordActivity.class));
         dataList.add(new Model("传感器，蓝牙", SensorActivity.class));
