@@ -12,23 +12,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.xogrp.john.myjni.NdkUtil;
 
 public class JniTestActivity extends AppCompatActivity {
 
     ImageView ivRoot, ivResult;
 
-    static {
-        System.loadLibrary("hello-jni");
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jni_test);
-        Log.e("ziq", stringFromJNI());
-        NdkUtil ndkUtil = new NdkUtil();
-        Log.e("ziq", ndkUtil.stringFromJNI());
 
         ivRoot = (ImageView) findViewById(R.id.gaussBlur_root);
         ivResult = (ImageView) findViewById(R.id.gaussBlur_result);
@@ -54,12 +46,9 @@ public class JniTestActivity extends AppCompatActivity {
         });
     }
 
-    public native String stringFromJNI();
 
     public void gaussBlur(View v, Bitmap bitmap) {
         //调用native方法，传入Bitmap对象，对Bitmap进行高斯迷糊处理
-        NdkUtil ndkUtil = new NdkUtil();
-        ndkUtil.gaussBlur(bitmap);
         //把Bitmap对象设置给iv2，，因为是直接修改bitmap，之前setImageBitmap 中的imageView 的bitmap 也变了，所以不用再设置
 //        ivResult.setImageBitmap(bitmap);
     }

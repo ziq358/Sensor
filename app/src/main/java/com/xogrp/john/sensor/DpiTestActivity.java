@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xogrp.john.myjni.NdkUtil;
-
 public class DpiTestActivity extends AppCompatActivity {
 
     private static final String TAG = "DpiTestActivity";
