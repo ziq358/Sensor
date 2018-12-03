@@ -181,6 +181,7 @@
         <!-- 极光推送 -->
 
         <activity android:name=".JniTestActivity" />
+        <activity android:name=".UniversalImageLoaderAty" />
         <activity android:name=".SpannableStringActivity" />
         <activity android:name=".FangYiBangActivity" />
         <activity android:name=".RecordActivity" />

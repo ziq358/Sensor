@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         dataList.add(new Model("SingleTop", SingleTopModelActivity.class));
         dataList.add(new Model("SingleTask", SingleTaskModelActivity.class));
         dataList.add(new Model("SingleInstance", SingleInstanceModelActivity.class));
+        dataList.add(new Model("UniversalImageLoader", UniversalImageLoaderAty.class));
         return dataList;
     }
 
