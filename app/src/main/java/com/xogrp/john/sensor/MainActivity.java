@@ -18,7 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.xogrp.john.sensor.map.BaiduMapActivity;
-import com.xogrp.john.sensor.map.GoogleMapViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         dataList.add(new Model("录音", RecordActivity.class));
         dataList.add(new Model("传感器，蓝牙", SensorActivity.class));
         dataList.add(new Model("二维码", QRcodeActivity.class));
-        dataList.add(new Model("Google 地图", GoogleMapViewActivity.class));
+//        dataList.add(new Model("Google 地图", GoogleMapViewActivity.class));
         dataList.add(new Model("百度 地图", BaiduMapActivity.class));
         dataList.add(new Model("JNI", JniTestActivity.class));
         dataList.add(new Model("OpenGl", OpenglActivity.class));

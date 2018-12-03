@@ -40,14 +40,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:26.+'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta1'
     compile 'com.android.support:design:26.+'
     //二维码
-    compile 'com.google.zxing:core:3.3.0'
-    //google地图
-    compile 'com.google.android.gms:play-services-maps:11.0.4'
-    testCompile 'junit:junit:4.12'
-    compile 'com.squareup.picasso:picasso:2.2.0'
+    compile 'com.google.zxing:core:3.3.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.jakewharton:butterknife:8.8.1'
+
+    compile 'com.squareup.picasso:picasso:2.2.0'
 }
