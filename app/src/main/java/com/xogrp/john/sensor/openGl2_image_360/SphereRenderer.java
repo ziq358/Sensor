@@ -205,7 +205,8 @@ public class SphereRenderer implements GLSurfaceView.Renderer {
         private FloatBuffer mTexCoordinateBuffer;
         private ShortBuffer mIndexBuffer;
         private int mNumIndices;
-
+    //new Sphere(18,75,150);
+                            //半径   //环     //把…划成扇形
         public Sphere(float radius, int rings, int sectors) {
             final float PI = (float) Math.PI;
             final float PI_2 = (float) (Math.PI / 2);
@@ -237,6 +238,20 @@ public class SphereRenderer implements GLSurfaceView.Renderer {
                     vertexs[v++] = z * radius;
                 }
             }
+
+            //点是 从上端到下端 ， 一环接一环 共rings 环，每环sectors + 1个点， 每环从右边x = 1 开始环绕一周
+            //new Sphere(18,75,150);为例子
+            // 150 149 ... 2   1   0           第一环
+            // 301 300 ... 153 152 151          第二环
+            // 452 451 ... 304 303 302          第三环
+
+            //形成的三角形是
+            // 0 151 1，     第一条 环
+            // 1 151 152，
+            // 151 302 152，    第二条 环
+            // 152 302 303，
+
+
 
             //glDrawElements
             int counter = 0;
