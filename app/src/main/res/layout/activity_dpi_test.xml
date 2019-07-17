@@ -3,30 +3,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#000000"
     >
     <TextView
         android:id="@+id/textSource"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#ffffff"
         />
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#ffffff"
         />
-    <FrameLayout
-        android:layout_marginTop="10dp"
+    <ImageView
+        android:id="@+id/img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/black"
-        >
-        <ImageView
-            android:id="@+id/img"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/blue_card_intro_hand"
-            />
-    </FrameLayout>
+        android:src="@drawable/blue_card_intro_hand"
+        />
+    <ImageView
+        android:id="@+id/img2"
+        android:layout_marginTop="2dp"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:background="@drawable/blue_card_intro_hand"
+        />
 
 </LinearLayout>

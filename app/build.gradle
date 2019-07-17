@@ -4,7 +4,7 @@ android {
         config {
             keyAlias 'key0'
             keyPassword 'xiaoqiang'
-            storeFile file('/Users/john/Documents/android/Sensor/app/Signature.jks')
+            storeFile file('./Signature.jks')
             storePassword 'xiaoqiang'
         }
     }
