@@ -106,6 +106,8 @@ public class CameraActivity extends Activity implements View.OnClickListener{
         mCamera.cancelAutoFocus();
         android.hardware.Camera.Parameters parameters = mCamera.getParameters();
         parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_AUTO);
+        //在Camera.Area对象中的Rect字段，代表了一个被映射成2000x2000单元格的矩形。
+        // 坐标（-1000，-1000）代表Camera图像的左上角，（1000,1000）代表Camera图像的右下角
         float touchX = (event.getX() / surfaceWidth) * 2000 - 1000;
         float touchY = (event.getY() / surfaceHeight) * 2000 - 1000;
         int left = clamp((int) touchX - AREA_SIZE / 2, -1000, 1000);
