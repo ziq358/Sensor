@@ -37,10 +37,12 @@ public class DpiTestActivity extends AppCompatActivity {
         textSource.setText("源图片 宽： "+bitmap.getWidth()+ "长： "+bitmap.getHeight());
         final TextView textView = (TextView) findViewById(R.id.text);
         final ImageView imageView = (ImageView) findViewById(R.id.img);
+        final ImageView imageView2 = (ImageView) findViewById(R.id.img2);
         imageView.post(new Runnable() {
             @Override
             public void run() {
-                textView.setText("宽： "+imageView.getWidth()+ "长： "+imageView.getHeight());
+                textView.setText("1 宽： "+imageView.getWidth()+ "长： "+imageView.getHeight() +
+                        "\n2 宽： "+imageView2.getWidth()+ "长： "+imageView2.getHeight());
             }
         });
     }
